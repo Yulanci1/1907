@@ -1,4 +1,3 @@
-# bot.py
 from telegram.ext import ApplicationBuilder, CommandHandler
 from checker import check_slots
 from telegram import Update
@@ -34,12 +33,15 @@ async def notify_once(app):
 
         await asyncio.sleep(300)
 
-async def main():
+def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("check", check_command))
 
-    # Создаём фоновую задачу после запуска event loop
-    asyncio.create_task(notify_once(app))
+    # Запускаем notify_once после инициализации, когда event loop уже работает
+    async def post_init(app):
+        asyncio.create_task(notify_once(app))
+
+    app.post_init = post_init
 
     print("✅ Бот запущен")
-    await app.run_polling()
+    app.run_polling()
