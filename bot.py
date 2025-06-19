@@ -11,7 +11,7 @@ TELEGRAM_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 
 async def check_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-available = await check_slots()
+  available = await check_slots()
 msg = "🎉 Даты доступны для записи!" if available else "😔 Нет доступных дат на запись."
 await update.message.reply_text(msg)
 
