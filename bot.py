@@ -16,7 +16,7 @@ msg = "🎉 Даты доступны для записи!" if available else "�
 await update.message.reply_text(msg)
 
 async def notify_once(app):
-await asyncio.sleep(10)
+  await asyncio.sleep(10)
 previous_status = None
 
 while True:
