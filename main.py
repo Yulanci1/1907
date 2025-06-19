@@ -1,4 +1,4 @@
 from bot import main
+import asyncio
 
-# Просто вызываем main() без asyncio.run()
-main()
+asyncio.run(main())
