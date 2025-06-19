@@ -1,7 +1,8 @@
-import asyncio
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler
 from checker import check_slots
+from telegram import Update
+from telegram.ext import ContextTypes
+import asyncio
 import os
 from dotenv import load_dotenv
 
@@ -22,22 +23,19 @@ async def notify_once(app):
     while True:
         try:
             current = await check_slots()
-            if previous_status is None:  # Первый запуск
+            if previous_status is None:
                 previous_status = current
             elif current and not previous_status:
-                # Было False, стало True
                 await app.bot.send_message(chat_id=CHAT_ID, text="📢 Появились свободные даты на сайте VFS!")
                 previous_status = current
         except Exception as e:
             await app.bot.send_message(chat_id=CHAT_ID, text=f"Ошибка при парсинге: {e}")
 
-        await asyncio.sleep(300)  # Каждые 5 минут
+        await asyncio.sleep(300)
 
-async def main():
+def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
-
     app.add_handler(CommandHandler("check", check_command))
     asyncio.create_task(notify_once(app))
-
     print("✅ Бот запущен")
-    await app.run_polling()
+    app.run_polling()
